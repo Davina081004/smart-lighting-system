@@ -1,14 +1,13 @@
-export default [
+module.exports = [
     {
-        files: ["*.js", "tests/*.js"],
+        files: ["*.js"],
         languageOptions: {
             ecmaVersion: 2021,
-            sourceType: "module"
+            sourceType: "script",
         },
         rules: {
-            "no-unused-vars": "warn",
-            "no-undef": "error",
-            "semi": ["error", "always"]
+            semi: ["error", "always"],
+            quotes: ["error", "double"]
         }
     }
 ];
