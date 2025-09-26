@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         NODE_ENV = 'development'
-        MONGO_URI = credentials('mongodb-uri') 
+        MONGO_URI = credentials('MONGO_URI') 
     }
 
     stages {
