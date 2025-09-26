@@ -1,27 +1,24 @@
-require('dotenv').config(); // Load environment variables
-
+require("dotenv").config();
 const express = require("express");
 const { MongoClient } = require("mongodb");
-const app = express();
+require("dotenv").config();
 
+const app = express();
 app.use(express.json());
 
-// MongoDB connection from environment variables
 const url = process.env.MONGO_URI;
-const dbName = process.env.DB_NAME || "smartlights";
-const port = process.env.PORT || 3000;
+const dbName = "smartlights";
 let collection;
+let client;
 
-// Connect to MongoDB
-MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(client => {
-        console.log("Connected to MongoDB Atlas");
-        const db = client.db(dbName);
-        collection = db.collection("deviceStates");
-    })
-    .catch(err => console.error("MongoDB connection error:", err));
+async function connectDB() {
+    client = await MongoClient.connect(url);
+    const db = client.db(dbName);
+    collection = db.collection("deviceStates");
+    return client;
+}
 
-// POST device state
+// API routes...
 app.post("/api/v1/device/state", async (req, res) => {
     try {
         const payload = req.body;
@@ -32,7 +29,6 @@ app.post("/api/v1/device/state", async (req, res) => {
     }
 });
 
-// GET all device states
 app.get("/api/v1/device/state", async (req, res) => {
     try {
         const data = await collection.find({}).toArray();
@@ -42,7 +38,6 @@ app.get("/api/v1/device/state", async (req, res) => {
     }
 });
 
-// Reset all device states
 app.post("/api/v1/reset", async (req, res) => {
     try {
         await collection.deleteMany({});
@@ -52,6 +47,10 @@ app.post("/api/v1/reset", async (req, res) => {
     }
 });
 
-// Start server
-app.listen(port, () => console.log(`API running on http://localhost:${port}`));
+// Only start server if not testing
+if (process.env.NODE_ENV !== "test") {
+    app.listen(3000, () => console.log("API running on http://localhost:3000"));
+}
+
+module.exports = { app, connectDB };
 
