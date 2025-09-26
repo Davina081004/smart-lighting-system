@@ -6,7 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "start": "node server.js",
-    "test": "jest"
+    "test": "set NODE_ENV=test&& jest --detectOpenHandles"
   },
   "keywords": [],
   "author": "Davina",
