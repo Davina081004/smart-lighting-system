@@ -20,13 +20,13 @@ pipeline {
                 bat 'npm install'
             }
         }
-
         stage('Test') {
             steps {
                 echo 'Running tests...'
-                bat 'npm test -- --detectOpenHandles'
+                bat 'set NODE_ENV=test && npm test -- --detectOpenHandles'
             }
         }
+
 
         stage('Code Quality') {
             steps {

@@ -1,10 +1,14 @@
-jest.setTimeout(30000); // 30 seconds
+jest.setTimeout(30000);
 
 const request = require("supertest");
-const { app, connectDB } = require("../server");
+const { app, connectDB, closeDB } = require("../server");
 
 beforeAll(async () => {
-    await connectDB(); // make sure DB is ready before tests
+    await connectDB();
+});
+
+afterAll(async () => {
+    await closeDB();
 });
 
 describe("Smart Light API", () => {
@@ -29,3 +33,4 @@ describe("Smart Light API", () => {
         expect(res.body.success).toBe(true);
     });
 });
+

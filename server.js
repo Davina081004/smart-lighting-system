@@ -1,7 +1,6 @@
 require("dotenv").config();
 const express = require("express");
 const { MongoClient } = require("mongodb");
-require("dotenv").config();
 
 const app = express();
 app.use(express.json());
@@ -18,7 +17,7 @@ async function connectDB() {
     return client;
 }
 
-// API routes...
+
 app.post("/api/v1/device/state", async (req, res) => {
     try {
         const payload = req.body;
@@ -49,8 +48,16 @@ app.post("/api/v1/reset", async (req, res) => {
 
 // Only start server if not testing
 if (process.env.NODE_ENV !== "test") {
-    app.listen(3000, () => console.log("API running on http://localhost:3000"));
+    connectDB().then(() => {
+        app.listen(3000, () => console.log("API running on http://localhost:3000"));
+    });
 }
 
-module.exports = { app, connectDB };
+// Close DB helper for Jest
+async function closeDB() {
+    if (client) {
+        await client.close();
+    }
+}
 
+module.exports = { app, connectDB, closeDB };
